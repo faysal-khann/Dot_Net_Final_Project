@@ -15,6 +15,9 @@ namespace BLL
             cfg.CreateMap<EmployeeDTO, User>().ReverseMap();
             cfg.CreateMap<Employee, EmployeeDTO>().ReverseMap();
             cfg.CreateMap<Customer, CustomerDTO>().ReverseMap();
+            cfg.CreateMap<PendingEmployeeDTO, Employee>().ReverseMap();
+            cfg.CreateMap<PendingEmployeeDTO, User>().ReverseMap();
+            
 
         });
         public static Mapper GetMapper()

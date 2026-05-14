@@ -1,0 +1,58 @@
+﻿@model IEnumerable<BLL.DTOs.PendingEmployeeDTO>
+
+@{
+    ViewData["Title"] = "Pending Employees";
+}
+
+<h2>Pending Employee Approvals</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+<table class="table table-bordered table-striped mt-3">
+    <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Position</th>
+            <th>Requested Salary</th>
+            <th>Applied Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6" class="text-center">No pending employees found.</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.Name</td>
+                    <td>@emp.Email</td>
+                    <td>@emp.Position</td>
+                    <td>$@emp.Salary</td>
+                    <td>@emp.HiredAt.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <form method="post" style="display:inline-block;">
+                            <!-- Approve Button -->
+                            <button type="submit" asp-action="Approve" asp-route-id="@emp.EmployeeId" class="btn btn-success btn-sm">
+                                Approve
+                            </button>
+                            <!-- Reject Button -->
+                            <button type="submit" asp-action="Reject" asp-route-id="@emp.EmployeeId" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to reject this employee?');">
+                                Reject
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

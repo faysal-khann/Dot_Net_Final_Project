@@ -22,6 +22,8 @@ builder.Services.AddScoped<RegistrationRepo>();
 builder.Services.AddScoped<RegistrationService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AuthRepo>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<AdminRepo>();
 
 
 var app = builder.Build();
