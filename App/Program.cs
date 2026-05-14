@@ -1,7 +1,28 @@
-var builder = WebApplication.CreateBuilder(args);
+using DAL.EF;
+using BLL.Services;
+using DAL.EF;
+using DAL.Repos;
+using Microsoft.EntityFrameworkCore;
 
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDistributedMemoryCache(); // Required for session 
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session expiration 
+    options.Cookie.HttpOnly = true;                // Prevent JavaScript access 
+    options.Cookie.IsEssential = true;             // GDPR compliance 
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<HotelManagementContext>(opt =>
+    opt.UseSqlServer(builder.Configuration.GetConnectionString("DbConn")));
+
+// Dependency Injection
+builder.Services.AddScoped<RegistrationRepo>();
+builder.Services.AddScoped<RegistrationService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AuthRepo>();
+
 
 var app = builder.Build();
 
@@ -25,5 +46,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+app.UseSession();
 app.Run();

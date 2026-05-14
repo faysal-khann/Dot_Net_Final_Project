@@ -1,0 +1,40 @@
+﻿@model BLL.DTOs.LoginDTO
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-action="Login" method="post">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    
+    <button type="submit" class="btn btn-primary mt-3">Login</button>
+</form>
+
+<div class="mt-3">
+    <p>Don't have an account?</p>
+    <a asp-action="RegisterCustomer" asp-controller="Registration" class="btn btn-secondary">Register as Customer</a>
+    <a asp-action="RegisterEmployee" asp-controller="Registration" class="btn btn-outline-secondary">Register as Employee</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
