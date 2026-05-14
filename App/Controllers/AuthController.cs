@@ -39,16 +39,17 @@ namespace App.Controllers
                     {
                         return RedirectToAction("Dashboard", "Employee");
                     }
-                    else if(user.Role== "admin")
+                    else if (user.Role == "admin")
                     {
                         return RedirectToAction("Dashboard", "Admin");
                     }
-                    else if(user.Role== "receptionist")
+                    else if (user.Role == "receptionist")
                     {
-                        return RedirectToAction("Dashboard", "receptionist");
+                        return RedirectToAction("Dashboard", "Receptionist");
                     }
                     else
                     {
+                        //return RedirectToAction("Dashboard", "Admin");
                         return RedirectToAction("Index", "Home");
                     }
                 }

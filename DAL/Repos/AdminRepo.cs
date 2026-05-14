@@ -49,5 +49,10 @@ namespace DAL.Repos
 
             return db.SaveChanges() > 0;
         }
+
+
+
+
+        //-------------------------------------------User management methods -------------------------------------------
     }
 }

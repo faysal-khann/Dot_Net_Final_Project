@@ -1,0 +1,167 @@
+﻿@model IEnumerable<BLL.DTOs.UserDTO>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h2>User Management</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<!-- CREATE USER BUTTON -->
+<button type="button" class="btn btn-primary mb-3"
+        data-bs-toggle="modal"
+        data-bs-target="#createUserModal">
+    Create New User
+</button>
+
+<!-- CREATE USER MODAL -->
+<div class="modal fade" id="createUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Select User Type</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <a asp-controller="Registration"
+                       asp-action="RegisterEmployee"
+                       class="btn btn-success m-2">
+                    Create Employee
+                </a>
+
+                <a asp-controller="Registration"
+                       asp-action="RegisterCustomer"
+                       class="btn btn-info m-2">
+                    Create Customer
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- USER TABLE -->
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserId</td>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+
+                <td>
+                    <span class="badge bg-info">@user.Role</span>
+                </td>
+
+                <td>
+                    <span class="badge bg-secondary">@user.Status</span>
+                </td>
+
+                <td>
+                    <a asp-action="AssignRole"
+                           asp-route-id="@user.UserId"
+                           class="btn btn-warning btn-sm">
+                        Change Role
+                    </a>
+
+                    <a href="#"
+                           class="btn btn-secondary btn-sm"
+                           data-bs-toggle="modal"
+                           data-bs-target="#statusModal"
+                           data-userid="@user.UserId">
+                        Change Status
+                    </a>
+
+                    <form asp-action="Delete"
+                          asp-route-id="@user.UserId"
+                          method="post"
+                          class="d-inline"
+                          onsubmit="return confirm('Are you sure you want to delete this user?');">
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- STATUS MODAL -->
+<div class="modal fade" id="statusModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="post" asp-action="ChangeStatus">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Change User Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="userId" id="userIdField" />
+
+                    <select class="form-select" name="status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="pending">Pending</option>
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Save
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPT (IMPORTANT FIX) -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var statusModal = document.getElementById('statusModal');
+
+        statusModal.addEventListener('show.bs.modal', function (event) {
+
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-userid');
+
+            document.getElementById('userIdField').value = userId;
+        });
+
+    });
+</script>

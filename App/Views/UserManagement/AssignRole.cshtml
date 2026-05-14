@@ -1,0 +1,38 @@
+﻿@model BLL.DTOs.UserDTO
+
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<h2>Assign Role to User</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">User Info</h5>
+                <p><strong>Name:</strong> @Model.Name</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Current Role:</strong> <span class="badge badge-info">@Model.Role</span></p>
+
+                <form asp-action="AssignRole" method="post" class="mt-4">
+                    <input type="hidden" name="UserId" value="@Model.UserId" />
+                    
+                    <div class="form-group">
+                        <label for="Role"><strong>Select New Role:</strong></label>
+                        <select name="Role" class="form-control" required>
+                            <option value="">-- Select Role --</option>
+                            <option value="Admin">admin</option>
+                            <option value="Employee">employee</option>
+                            <option value="Receptionist">receptionist</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Update Role</button>
+                    <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

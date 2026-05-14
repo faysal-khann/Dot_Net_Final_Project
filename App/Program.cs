@@ -24,6 +24,10 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AuthRepo>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<AdminRepo>();
+builder.Services.AddScoped<UserManagementRepo>();
+builder.Services.AddScoped<UserManagementService>();
+
+
 
 
 var app = builder.Build();
@@ -45,7 +49,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Auth}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 app.UseSession();

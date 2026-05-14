@@ -26,8 +26,16 @@ namespace App.Controllers
             {
                 var success = _regService.RegisterCustomer(dto);
                 if (success)
+                {
+                    var role = HttpContext.Session.GetString("Role");
+
+                    if (role == "admin")
+                    {
+                        return RedirectToAction("Index", "UserManagement");
+                    }
+
                     return RedirectToAction("Login", "Auth");
-                ViewBag.Error = "Registration failed. Try again.";
+                }
             }
             return View(dto);
         }
@@ -45,8 +53,16 @@ namespace App.Controllers
             {
                 var success = _regService.RegisterEmployee(dto);
                 if (success)
-                    return RedirectToAction("Login","Auth" );
-                ViewBag.Error = "Registration failed. Try again.";
+                {
+                    var role = HttpContext.Session.GetString("Role");
+
+                    if (role == "admin")
+                    {
+                        return RedirectToAction("Index", "UserManagement");
+                    }
+
+                    return RedirectToAction("Login", "Auth");
+                }
             }
             return View(dto);
         }
