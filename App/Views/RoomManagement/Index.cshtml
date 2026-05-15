@@ -1,0 +1,279 @@
+﻿@model IEnumerable<BLL.DTOs.RoomDTO>
+@{
+    ViewData["Title"] = "Manage Rooms"; var roomTypes = ViewBag.RoomTypes as List<BLL.DTOs.RoomTypeDTO>;
+}
+
+<h2>Admin: Room Management</h2>
+<div class="mb-3">
+    <a asp-action="CreateRoom" class="btn btn-success">Add New Room</a>
+    <a asp-action="RoomTypes" class="btn btn-secondary">Manage Room Types</a>
+</div>
+
+<div class="row">
+    <!-- Main Table & Filters -->
+    <div class="col-md-8">
+        <!-- Advanced Filters -->
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body bg-light">
+                <form asp-action="Index" method="get" class="form-inline">
+                    <select name="typeId" class="form-control mr-2">
+                        <option value="">-- All Types --</option>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.RoomTypeId">@type.TypeName</option>
+                        }
+                    </select>
+                    <select name="status" class="form-control mr-2">
+                        <option value="">-- All Statuses --</option>
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                    <input type="number" name="minPrice" placeholder="Min $" class="form-control mr-2" style="width: 80px;" />
+                    <input type="number" name="maxPrice" placeholder="Max $" class="form-control mr-2" style="width: 80px;" />
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary ml-2">Clear</a>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr><th>Room</th><th>Type</th><th>Cap</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model)
+                {
+                    <tr>
+                        <td>@room.RoomNumber</td>
+                        <td>@room.RoomTypeName</td>
+                        <td>@room.Capacity</td>
+                        <td>$@room.Price</td>
+                        <td>@room.Status</td>
+                        <td>
+                            <a asp-action="EditRoom" asp-route-id="@room.RoomId" class="btn btn-sm btn-info">Edit</a>
+                            <form asp-action="DeleteRoom" asp-route-id="@room.RoomId" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger">Del</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Right Sidebar: Bulk Operations -->
+    <div class="col-md-4">
+        <!-- Bulk Pricing -->
+        <div class="card border-info mb-3">
+            <div class="card-header bg-info text-white">Bulk Price Update</div>
+            <div class="card-body">
+                <form asp-action="SetPricingByType" method="post">
+                    <select name="roomTypeId" class="form-control mb-2" required>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.RoomTypeId">@type.TypeName</option>
+                        }
+                    </select>
+                    <input type="number" name="newPrice" class="form-control mb-2" step="0.01" placeholder="New Price" required />
+                    <button type="submit" class="btn btn-info w-100 text-white">Apply Pricing</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bulk Maintenance -->
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">Bulk Maintenance</div>
+            <div class="card-body">
+                <form asp-action="MarkFloorMaintenance" method="post">
+                    <input type="text" name="floor" class="form-control mb-2" placeholder="Floor Prefix (e.g. 1)" required />
+                    <button type="submit" class="btn btn-danger w-100">Mark Maintenance</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* @model IEnumerable<BLL.DTOs.RoomDTO>
+
+@{
+    ViewData["Title"] = "Manage Rooms";
+    var roomTypes = ViewBag.RoomTypes as List<BLL.DTOs.RoomTypeDTO>;
+}
+
+<h2>Room Management</h2>
+<hr />
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+<div class="row">
+    <!-- Main Table & Filters -->
+    <div class="col-md-8">
+        
+        <!-- Advanced Filters -->
+        <div class="card mb-3">
+            <div class="card-body bg-light">
+                <form asp-action="Index" method="get" class="form-inline">
+                    <select name="typeId" class="form-control mr-2">
+                        <option value="">-- All Types --</option>
+                        @foreach (var type in roomTypes)
+                        {
+                            <option value="@type.RoomTypeId">@type.TypeName (Cap: @type.Capacity)</option>
+                        }
+                    </select>
+
+                    <select name="status" class="form-control mr-2">
+                        <option value="">-- All Statuses --</option>
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+
+                    <input type="number" name="minPrice" placeholder="Min $" class="form-control mr-2" style="width: 90px;" />
+                    <input type="number" name="maxPrice" placeholder="Max $" class="form-control mr-2" style="width: 90px;" />
+
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <a asp-action="Index" class="btn btn-secondary ml-2">Clear</a>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Room No.</th>
+                    <th>Type</th>
+                    <th>Capacity</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model)
+                {
+                    <tr>
+                        <td><strong>@room.RoomNumber</strong></td>
+                        <td>@room.RoomTypeName</td>
+                        <td>@room.Capacity</td>
+                        <td>$@room.Price</td>
+                        <td>
+                            @if (room.Status == "Available")
+                            {
+                                <span class="badge badge-success">Available</span>
+                            }
+                            else if (room.Status == "Maintenance")
+                            {
+
+                                <span class="badge badge-danger">Maintenance</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge badge-warning">@room.Status</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Right Sidebar: Bulk Operations -->
+    <div class="col-md-4">
+        
+        <!-- Bulk Floor Maintenance -->
+        <div class="card mb-4 border-danger">
+            <div class="card-header bg-danger text-white"><strong>Bulk Status Update</strong></div>
+            <div class="card-body">
+                <form asp-action="MarkFloorMaintenance" method="post">
+                    <div class="form-group">
+                        <label>Floor Prefix (e.g. '1' for 101-199)</label>
+                        <input type="text" name="floor" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100" onclick="return confirm('Mark entire floor for maintenance?');">Mark Maintenance</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Bulk Pricing Update -->
+        <div class="card border-info">
+            <div class="card-header bg-info text-white"><strong>Bulk Price Update</strong></div>
+            <div class="card-body">
+                <form asp-action="SetPricingByType" method="post">
+                    <div class="form-group">
+                        <label>Select Room Type</label>
+                        <select name="roomTypeId" class="form-control" required>
+                            @foreach (var type in roomTypes)
+                            {
+                                <option value="@type.RoomTypeId">@type.TypeName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>New Price ($)</label>
+                        <input type="number" name="newPrice" class="form-control" step="0.01" required />
+                    </div>
+                    <button type="submit" class="btn btn-info w-100 text-white" onclick="return confirm('Update price for ALL rooms of this type?');">Apply Pricing</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div> *@

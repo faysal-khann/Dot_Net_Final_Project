@@ -28,7 +28,13 @@ builder.Services.AddScoped<UserManagementRepo>();
 builder.Services.AddScoped<UserManagementService>();
 
 
+builder.Services.AddScoped<RoomManagementRepo>();
+builder.Services.AddScoped<RoomManagementService>();
 
+
+
+// Add this line to register AutoMapper
+builder.Services.AddSingleton(BLL.MapperConfig.GetMapper());
 
 var app = builder.Build();
 

@@ -17,6 +17,14 @@ namespace BLL
             cfg.CreateMap<Customer, CustomerDTO>().ReverseMap();
             cfg.CreateMap<PendingEmployeeDTO, Employee>().ReverseMap();
             cfg.CreateMap<PendingEmployeeDTO, User>().ReverseMap();
+
+
+            cfg.CreateMap<RoomDTO, Room>().ReverseMap();
+            cfg.CreateMap<RoomDTO, RoomType>().ReverseMap();
+            cfg.CreateMap<RoomTypeDTO, RoomType>().ReverseMap();
+            cfg.CreateMap<RoomTypeDTO, Room>().ReverseMap();
+
+           
             
 
         });
