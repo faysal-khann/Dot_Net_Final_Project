@@ -37,7 +37,14 @@ namespace App.Controllers
                     // Redirect based on Role
                     if (user.Role == "employee")
                     {
-                        return RedirectToAction("Dashboard", "Employee");
+                        if(user.Status == "active")
+                        {
+                            return RedirectToAction("Dashboard", "Employee");
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Your account is inactive. Please contact admin.";
+                        }
                     }
                     else if (user.Role == "admin")
                     {

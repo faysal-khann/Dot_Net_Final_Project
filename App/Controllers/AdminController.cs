@@ -32,26 +32,39 @@ namespace App.Controllers
 
         // POST: Approve
         [HttpPost]
-        public IActionResult Approve(int id)
+        public IActionResult Approve(int id, decimal newSalary)
         {
-            var success = _adminService.ApproveEmployee(id);
+            bool success = _adminService.ApproveEmployeeWithSalary(id, newSalary);
+
             if (success)
             {
-                TempData["Message"] = "Employee Approved Successfully!";
+                TempData["Success"] = "Employee approved and salary updated successfully.";
             }
-            return RedirectToAction("PendingEmployees");
+            else
+            {
+                TempData["Error"] = "Failed to approve employee. They might not exist.";
+            }
+
+            // Redirect back to the page that lists the employees
+            return RedirectToAction("PendingEmployees"); // Change this to match your actual view name
         }
 
-        // POST: Reject
         [HttpPost]
         public IActionResult Reject(int id)
         {
-            var success = _adminService.RejectEmployee(id);
+            bool success = _adminService.RejectEmployee(id);
+
             if (success)
             {
-                TempData["Message"] = "Employee Rejected.";
+                TempData["Success"] = "Employee has been rejected.";
             }
-            return RedirectToAction("PendingEmployees");
+            else
+            {
+                TempData["Error"] = "Failed to reject employee.";
+            }
+
+            // Redirect back to the page that lists the employees
+            return RedirectToAction("PendingEmployees"); // Change this to match your actual view name
         }
         // Add this inside AdminController.cs
         [HttpGet]

@@ -40,13 +40,25 @@
                     <td>$@emp.Salary</td>
                     <td>@emp.HiredAt.ToString("yyyy-MM-dd")</td>
                     <td>
-                        <form method="post" style="display:inline-block;">
-                            <!-- Approve Button -->
-                            <button type="submit" asp-action="Approve" asp-route-id="@emp.EmployeeId" class="btn btn-success btn-sm">
-                                Approve
+                        <form method="post" class="d-inline-flex align-items-center">
+                            <!-- Hidden ID so the controller knows which employee it is -->
+                            <input type="hidden" name="id" value="@emp.EmployeeId" />
+
+                            <!-- Salary Input -->
+                            <div class="input-group input-group-sm mr-2" style="width: 150px;">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" name="newSalary" class="form-control" value="@emp.Salary" step="0.01" min="0" required />
+                            </div>
+
+                            <!-- Approve & Set Salary Button -->
+                            <button type="submit" asp-action="Approve" class="btn btn-success btn-sm mr-1">
+                                Approve & Set Salary
                             </button>
+
                             <!-- Reject Button -->
-                            <button type="submit" asp-action="Reject" asp-route-id="@emp.EmployeeId" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to reject this employee?');">
+                            <button type="submit" asp-action="Reject" class="btn btn-danger btn-sm" formnovalidate onclick="return confirm('Are you sure you want to reject this employee?');">
                                 Reject
                             </button>
                         </form>

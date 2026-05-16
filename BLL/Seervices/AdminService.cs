@@ -36,14 +36,17 @@ namespace BLL.Services
             return dtos;
         }
 
-        public bool ApproveEmployee(int employeeId)
+        // 1. Approve & Set Salary
+        public bool ApproveEmployeeWithSalary(int employeeId, decimal newSalary)
         {
-            return repo.ProcessEmployeeApproval(employeeId, "Approved");
+            // You could add business rules here (e.g., maximum salary limit)
+            return repo.ApproveEmployee(employeeId, newSalary);
         }
 
+        // 2. Reject Employee
         public bool RejectEmployee(int employeeId)
         {
-            return repo.ProcessEmployeeApproval(employeeId, "Rejected");
+            return repo.RejectEmployee(employeeId);
         }
         //-----------------------------------------------------------------------------------------------------------
         public DashboardDTO GetDashboardStats()

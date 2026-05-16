@@ -25,26 +25,47 @@ namespace DAL.Repos
         }
 
         // 2. Change Approval Status and update User Login Status
-        public bool ProcessEmployeeApproval(int employeeId, string newStatus)
+        // 1. Approve & Set Salary
+        public bool ApproveEmployee(int employeeId, decimal newSalary)
         {
             var employee = db.Employees.Find(employeeId);
-            if (employee == null) return false;
 
-            // Update Employee Table
-            employee.ApprovalStatus = newStatus;
+            if (employee == null)
+            {
+                return false;
+            }
 
-            // Workflow Automation: If Approved, activate their User account
             var user = db.Users.Find(employee.UserId);
+
+            employee.ApprovalStatus = "approved";
+            employee.Salary = newSalary;
+
+
             if (user != null)
             {
-                if (newStatus == "Approved")
-                {
-                    user.Status = "active"; // Now they can log in
-                }
-                else if (newStatus == "Rejected")
-                {
-                    user.Status = "inactive"; // Prevent login
-                }
+                user.Status = "active";
+            }
+
+            return db.SaveChanges() > 0;
+        }
+
+        // 2. Reject Employee
+        public bool RejectEmployee(int employeeId)
+        {
+            var employee = db.Employees.Find(employeeId);
+
+            if (employee == null)
+            {
+                return false;
+            }
+
+            var user = db.Users.Find(employee.UserId);
+
+            employee.ApprovalStatus = "rejected";
+
+            if (user != null)
+            {
+                user.Status = "inactive";
             }
 
             return db.SaveChanges() > 0;
