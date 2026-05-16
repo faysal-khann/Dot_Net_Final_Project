@@ -1,0 +1,31 @@
+﻿@model IEnumerable<BLL.DTOs.RoomAvailabilityDTO>
+
+<h2>Available Rooms</h2>
+
+<table class="table table-bordered">
+    <thead><tr><th>Room</th><th>Type</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.RoomNumber</td>
+                <td>@r.TypeName</td>
+                <td>@r.Price</td>
+                <td>@r.Status</td>
+                <td>
+                    <form asp-action="BookRoom" method="post">
+                        <input type="hidden" name="roomId" value="@r.RoomId" />
+                        <input type="hidden" name="price" value="@r.Price" />
+                        <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
+                        <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
+                        <select name="method" class="form-select form-select-sm">
+                            <option>Card</option>
+                            <option>Cash</option>
+                        </select>
+                        <button class="btn btn-sm btn-success mt-1">Book</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

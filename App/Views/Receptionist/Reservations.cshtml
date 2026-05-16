@@ -1,0 +1,36 @@
+﻿@model IEnumerable<BLL.DTOs.ReservationDTO>
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<h2>Reservations</h2>
+<a asp-action="CreateReservation" class="btn btn-primary mb-3">New Reservation</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Check-In</th>
+            <th>Check-Out</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.CustomerName</td>
+                <td>@r.CheckInDate.ToShortDateString()</td>
+                <td>@r.CheckOutDate.ToShortDateString()</td>
+                <td>@r.Status</td>
+                <td>@r.TotalAmount</td>
+                <td>
+                    <a asp-action="CheckIn" asp-route-id="@r.ReservationId" class="btn btn-sm btn-success">Check-In</a>
+                    <a asp-action="CheckOut" asp-route-id="@r.ReservationId" class="btn btn-sm btn-warning">Check-Out</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,126 @@
+﻿@model BLL.DTOs.EmployeeDashboardDTO
+@{
+    ViewData["Title"] = "Employee Dashboard";
+}
+
+<div class="container mt-4">
+    <h2>Welcome, @Model.EmployeeName!</h2>
+    
+    <!-- Profile Approval Status Alert -->
+    @if (Model.ApprovalStatus == "Pending")
+    {
+        <div class="alert alert-warning">
+            <strong>Notice:</strong> Your account is pending admin approval. Some features may be restricted.
+        </div>
+    }
+
+    <!-- Notifications for Success/Warning -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["WarningMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["WarningMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Stats & History Row -->
+    <div class="row mb-4 mt-3">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Work History</h5>
+                    <p class="card-text display-6">@Model.RoomsServicedThisMonth</p>
+                    <p>Rooms serviced this month</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- TASK LIST (Housekeeping Workflow) -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">My Task List (Rooms to Clean/Fix)</h5>
+                </div>
+                <div class="card-body">
+                    @if (!Model.Tasks.Any())
+                    {
+                        <p class="text-muted">No pending tasks. Great job!</p>
+                    }
+                    else
+                    {
+                        <ul class="list-group">
+                            @foreach (var task in Model.Tasks)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Room @task.RoomNumber</strong>
+                                        <span class="badge @(task.Status == "Cleaning" ? "bg-warning text-dark" : "bg-danger") ms-2">
+                                            @task.Status
+                                        </span>
+                                    </div>
+                                    
+                                    @if (task.Status == "Cleaning")
+                                    {
+                                        <div class="btn-group">
+                                            <form asp-action="MarkRoomCleaned" method="post" class="d-inline">
+                                                <input type="hidden" name="roomId" value="@task.RoomId" />
+                                                <button type="submit" class="btn btn-sm btn-success">Mark Available</button>
+                                            </form>
+                                            <form asp-action="ReportMaintenance" method="post" class="d-inline ms-1">
+                                                <input type="hidden" name="roomId" value="@task.RoomId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Report Issue">⚠️</button>
+                                            </form>
+                                        </div>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- READ-ONLY: Today's Check-ins & Check-outs -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Today's Schedule (Read-Only)</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Check-Outs (Need Cleaning Next)</h6>
+                    <ul class="list-group mb-3">
+                        @if (!Model.TodaysCheckOuts.Any())
+                        {
+                            <li class="list-group-item text-muted">No check-outs today.</li>
+                        }
+                        @foreach (var co in Model.TodaysCheckOuts)
+                        {
+                            <li class="list-group-item">Room @co.RoomNumber - @co.GuestName</li>
+                        }
+                    </ul>
+
+                    <h6>Check-Ins</h6>
+                    <ul class="list-group">
+                        @if (!Model.TodaysCheckIns.Any())
+                        {
+                            <li class="list-group-item text-muted">No check-ins today.</li>
+                        }
+                        @foreach (var ci in Model.TodaysCheckIns)
+                        {
+                            <li class="list-group-item">Room @ci.RoomNumber - @ci.GuestName</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

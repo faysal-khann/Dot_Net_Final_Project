@@ -1,0 +1,23 @@
+﻿@model IEnumerable<BLL.DTOs.RoomAvailabilityDTO>
+<h2>Room Status Grid</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr><th>Room</th><th>Type</th><th>Price</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.RoomNumber</td>
+                <td>@r.TypeName</td>
+                <td>@r.Price</td>
+                <td>
+                    <span class="badge @(r.Status == "Available" ? "bg-success" : r.Status == "Occupied" ? "bg-danger" : "bg-warning")">
+                        @r.Status
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

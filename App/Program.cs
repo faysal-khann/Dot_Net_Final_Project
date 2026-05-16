@@ -27,9 +27,20 @@ builder.Services.AddScoped<AdminRepo>();
 builder.Services.AddScoped<UserManagementRepo>();
 builder.Services.AddScoped<UserManagementService>();
 
+builder.Services.AddScoped<EmployeeService>();
+builder.Services.AddScoped<EmployeeRepo>();
+
 
 builder.Services.AddScoped<RoomManagementRepo>();
 builder.Services.AddScoped<RoomManagementService>();
+
+builder.Services.AddScoped<ReceptionistRepo>();
+builder.Services.AddScoped<ReceptionistService>();
+
+builder.Services.AddScoped<CustomerRepo>();
+builder.Services.AddScoped<CustomerService>();
+
+
 
 
 

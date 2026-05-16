@@ -1,0 +1,211 @@
+﻿@model BLL.DTOs.ReceptionistDashboardDTO
+@{
+    ViewData["Title"] = "Receptionist Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Receptionist Dashboard</h2>
+
+    <!-- SUMMARY CARDS -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center">
+                <div class="card-body">
+                    <h6>Today Check-ins</h6>
+                    <h2>@Model.TodayCheckIns</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center">
+                <div class="card-body">
+                    <h6>Today Check-outs</h6>
+                    <h2>@Model.TodayCheckOuts</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center">
+                <div class="card-body">
+                    <h6>Revenue Today</h6>
+                    <h2>@Model.RevenueToday</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white text-center">
+                <div class="card-body">
+                    <h6>Rooms to Clean</h6>
+                    <h2>@Model.RoomsToClean</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALERTS -->
+    @if (Model.CleaningAlerts.Any())
+    {
+        foreach (var a in Model.CleaningAlerts)
+        {
+            <div class="alert alert-warning">
+                🔔 Room @a.RoomNumber checked out. Status changed to <strong>Cleaning</strong>.
+            </div>
+        }
+    }
+
+    <!-- TABS -->
+    <ul class="nav nav-tabs" id="recTabs" role="tablist">
+        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#reservations">Reservations</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#customers">Customers</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#rooms">Room Status</button></li>
+        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#payments">Payments</button></li>
+    </ul>
+
+    <div class="tab-content mt-3">
+
+        <!-- RESERVATIONS -->
+        <div class="tab-pane fade show active" id="reservations">
+            <div class="d-flex justify-content-between mb-2">
+                <h5>Reservations</h5>
+                <a asp-action="CreateReservation" class="btn btn-primary btn-sm">+ New Reservation</a>
+            </div>
+
+            <!-- Search Form -->
+            <form class="row g-2 mb-3" asp-action="SearchReservations" method="get">
+                <div class="col-md-3">
+                    <input name="CustomerName" class="form-control" placeholder="Customer Name" />
+                </div>
+                <div class="col-md-3">
+                    <input type="date" name="Date" class="form-control" />
+                </div>
+                <div class="col-md-3">
+                    <select name="Status" class="form-select">
+                        <option value="">Status</option>
+                        <option>Pending</option>
+                        <option>Active</option>
+                        <option>Completed</option>
+                        <option>Cancelled</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-dark w-100">Search</button>
+                </div>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Check-In</th>
+                        <th>Check-Out</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.Reservations)
+                    {
+                        <tr>
+                            <td>@r.CustomerName</td>
+                            <td>@r.CheckInDate.ToShortDateString()</td>
+                            <td>@r.CheckOutDate.ToShortDateString()</td>
+                            <td>@r.Status</td>
+                            <td>@r.TotalAmount</td>
+                            <td>
+                                <a asp-action="CheckIn" asp-route-id="@r.ReservationId" class="btn btn-sm btn-success">Check-In</a>
+                                <a asp-action="CheckOut" asp-route-id="@r.ReservationId" class="btn btn-sm btn-warning">Check-Out</a>
+                                <a asp-action="EditReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-secondary">Edit</a>
+                                <a asp-action="CancelReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-danger">Cancel</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- CUSTOMERS -->
+        <div class="tab-pane fade" id="customers">
+            <div class="d-flex justify-content-between mb-2">
+                <h5>Customers</h5>
+                <a asp-action="CreateCustomer" class="btn btn-success btn-sm">+ Register Customer</a>
+            </div>
+
+            <!-- Search Customers -->
+            <form class="row g-2 mb-3" asp-action="SearchCustomers" method="get">
+                <div class="col-md-4"><input name="Name" class="form-control" placeholder="Name"></div>
+                <div class="col-md-4"><input name="Phone" class="form-control" placeholder="Phone"></div>
+                <div class="col-md-4"><input name="Email" class="form-control" placeholder="Email"></div>
+            </form>
+
+            <table class="table table-striped">
+                <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>VIP</th><th>Action</th></tr></thead>
+                <tbody>
+                    @foreach (var c in Model.Customers)
+                    {
+                        <tr>
+                            <td>@c.Name</td>
+                            <td>@c.Phone</td>
+                            <td>@c.Email</td>
+                            <td>@(c.IsVIP ? "Yes" : "No")</td>
+                            <td><a asp-action="EditCustomer" asp-route-id="@c.CustomerId" class="btn btn-sm btn-secondary">Edit</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ROOM STATUS -->
+        <div class="tab-pane fade" id="rooms">
+            <h5>Room Availability</h5>
+
+            <!-- Filter Rooms -->
+            <form class="row g-2 mb-3" asp-action="FilterRooms" method="get">
+                <div class="col-md-4">
+                    <input name="Type" class="form-control" placeholder="Room Type" />
+                </div>
+                <div class="col-md-4">
+                    <input name="MaxPrice" class="form-control" placeholder="Max Price" />
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-dark w-100">Filter</button>
+                </div>
+            </form>
+
+            <table class="table table-bordered">
+                <thead><tr><th>Room</th><th>Type</th><th>Price</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var r in Model.Rooms)
+                    {
+                        <tr>
+                            <td>@r.RoomNumber</td>
+                            <td>@r.TypeName</td>
+                            <td>@r.Price</td>
+                            <td><span class="badge @(r.Status == "Available" ? "bg-success" : r.Status == "Occupied" ? "bg-danger" : "bg-warning")">@r.Status</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAYMENTS -->
+        <div class="tab-pane fade" id="payments">
+            <h5>Payments</h5>
+            <table class="table table-striped">
+                <thead><tr><th>Reservation</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.Payments)
+                    {
+                        <tr>
+                            <td>@p.ReservationId</td>
+                            <td>@p.Amount</td>
+                            <td>@p.Method</td>
+                            <td>@p.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

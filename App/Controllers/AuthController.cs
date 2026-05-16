@@ -45,7 +45,7 @@ namespace App.Controllers
                     }
                     else if (user.Role == "receptionist")
                     {
-                        return RedirectToAction("Dashboard", "Receptionist");
+                        return RedirectToAction("Dashboard", "Customer");
                     }
                     else
                     {

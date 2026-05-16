@@ -4,19 +4,12 @@ using System.Text;
 
 namespace BLL.DTOs
 {
-    public class CustomerDTO
+    public class CustomerpDTO
     {
-
-       
+        public int CustomerId { get; set; }
         public string Name { get; set; }
-
         public string Email { get; set; }
-
-        public string Password { get; set; }
-
-        // Customer table fields
         public string Phone { get; set; }
-
-        public string Address { get; set; }
+        public bool IsVIP { get; set; }
     }
 }

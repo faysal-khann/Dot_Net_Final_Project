@@ -1,0 +1,70 @@
+﻿@model BLL.DTOs.CustomerDashboardDTO
+@{
+    ViewData["Title"] = "Customer Dashboard";
+}
+
+<div class="container mt-4">
+    <h2>Welcome, @Model.Profile.Name</h2>
+
+    <div class="alert alert-info">
+        VIP Status: <strong>@(Model.Profile.IsVIP ? "VIP ⭐" : "Standard")</strong>
+    </div>
+
+    <!-- SEARCH + AVAILABILITY -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Search Available Rooms</div>
+        <div class="card-body">
+            <form asp-action="SearchRooms" method="get" class="row g-2">
+                <div class="col-md-3"><input type="date" name="checkIn" class="form-control" required /></div>
+                <div class="col-md-3"><input type="date" name="checkOut" class="form-control" required /></div>
+                <div class="col-md-2"><input name="type" class="form-control" placeholder="Room Type" /></div>
+                <div class="col-md-2"><input name="minPrice" class="form-control" placeholder="Min Price" /></div>
+                <div class="col-md-2"><input name="maxPrice" class="form-control" placeholder="Max Price" /></div>
+                <div class="col-md-12"><button class="btn btn-primary w-100">Search</button></div>
+            </form>
+        </div>
+    </div>
+   
+
+    <!-- RESERVATION HISTORY -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">My Reservations</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead><tr><th>Check-In</th><th>Check-Out</th><th>Status</th><th>Total</th></tr></thead>
+                <tbody>
+                    @foreach (var r in Model.MyReservations)
+                    {
+                        <tr>
+                            <td>@r.CheckInDate.ToShortDateString()</td>
+                            <td>@r.CheckOutDate.ToShortDateString()</td>
+                            <td><span class="badge bg-info">@r.Status</span></td>
+                            <td>@r.TotalAmount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAYMENT HISTORY -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">Payment History</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead><tr><th>Reservation</th><th>Amount</th><th>Method</th><th>Date</th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.MyPayments)
+                    {
+                        <tr>
+                            <td>@p.ReservationId</td>
+                            <td>@p.Amount</td>
+                            <td>@p.Method</td>
+                            <td>@p.PaymentDate.ToShortDateString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

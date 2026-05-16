@@ -1,0 +1,27 @@
+﻿@model BLL.DTOs.InvoiceDTO
+
+<h2>Checkout Invoice</h2>
+
+<p><strong>Customer:</strong> @Model.CustomerName</p>
+<p><strong>Nights:</strong> @Model.Nights</p>
+
+<table class="table">
+    <thead><tr><th>Room</th><th>Price/Night</th></tr></thead>
+    <tbody>
+        @foreach (var r in Model.Rooms)
+        {
+            <tr><td>@r.RoomNumber</td><td>@r.PricePerNight</td></tr>
+        }
+    </tbody>
+</table>
+
+<h4>Total: @Model.Amount</h4>
+
+<form asp-action="ConfirmCheckOut" method="post">
+    <input type="hidden" name="id" value="@Model.ReservationId" />
+    <select name="paymentMethod" class="form-select mb-2">
+        <option>Cash</option>
+        <option>Card</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Confirm Payment</button>
+</form>
