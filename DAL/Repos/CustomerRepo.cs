@@ -44,5 +44,55 @@ namespace DAL.Repos
             return db.Customers
                      .FirstOrDefault(c => c.UserId == userId);
         }
+        public List<Room> GetAvailableRooms(DateTime reqCheckIn, DateTime reqCheckOut, string type, decimal? minPrice, decimal? maxPrice)
+        {
+             var checkIn = DateOnly.FromDateTime(reqCheckIn);
+    var checkOut = DateOnly.FromDateTime(reqCheckOut);
+            // Step A: Find IDs of rooms that are already booked during these dates
+            // (Formula: ExistingCheckIn < RequestedCheckOut AND ExistingCheckOut > RequestedCheckIn)
+            var bookedRoomIds = db.Reservations
+                .Where(res => res.Status != "Cancelled" &&
+                              res.CheckInDate < checkOut         &&
+                              res.CheckOutDate > checkIn)
+                .Select(res => res.RoomId)
+                .Distinct()
+                .ToList();
+
+            // Step B: Get all rooms EXCEPT the ones we just found
+            var query = db.Rooms.Include(r => r.RoomType)
+                          .Where(r => !bookedRoomIds.Contains(r.RoomId) && r.Status != "Maintenance");
+
+            // Apply optional filters
+            if (!string.IsNullOrEmpty(type))
+                query = query.Where(r => r.RoomType.TypeName.Contains(type));
+            if (minPrice.HasValue)
+                query = query.Where(r => r.Price >= minPrice.Value);
+            if (maxPrice.HasValue)
+                query = query.Where(r => r.Price <= maxPrice.Value);
+
+            return query.ToList();
+        }
+        public bool CancelReservation(int reservationId)
+        {
+            var reservation = db.Reservations.Find(reservationId);
+
+            if (reservation != null)
+            {
+                // 1. Change reservation status to Cancelled
+                reservation.Status = "Cancelled";
+
+                // 2. Find the payment and remove it (Refund)
+                var payment = db.Payments.FirstOrDefault(p => p.ReservationId == reservationId);
+                if (payment != null)
+                {
+                    db.Payments.Remove(payment);
+                }
+
+                // 3. Save both changes to the database
+                return db.SaveChanges() > 0;
+            }
+
+            return false;
+        }
     }
 }

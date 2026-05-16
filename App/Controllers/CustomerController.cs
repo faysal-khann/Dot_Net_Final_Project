@@ -58,5 +58,23 @@ namespace App.Controllers
             service.BookRoom(customerId, roomId, checkIn, checkOut, price, method);
             return RedirectToAction("Dashboard");
         }
+        // Add this inside CustomerController.cs
+        [HttpPost]
+        public IActionResult CancelReservation(int reservationId)
+        {
+            bool isCancelled = service.CancelReservation(reservationId);
+
+            if (isCancelled)
+            {
+                TempData["Success"] = "Your reservation has been cancelled successfully.";
+            }
+            else
+            {
+                TempData["Error"] = "Could not cancel the reservation. Please contact support.";
+            }
+
+            // Redirect back to the dashboard to refresh the table
+            return RedirectToAction("Dashboard");
+        }
     }
 }

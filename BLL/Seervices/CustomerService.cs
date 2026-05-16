@@ -40,7 +40,9 @@ namespace BLL.Services
                     CheckInDate = r.CheckInDate.ToDateTime(TimeOnly.MinValue),
                     CheckOutDate = r.CheckOutDate.ToDateTime(TimeOnly.MinValue),
                     Status = r.Status,
-                    TotalAmount = r.TotalAmount
+                    TotalAmount = r.TotalAmount,
+               
+
                 }).ToList(),
                 RoomTypes = roomtype.Select(t => new RoomTypeDTO
                 {
@@ -78,7 +80,7 @@ namespace BLL.Services
         // ROOM SEARCH (Advanced availability search placeholder)
         public List<RoomAvailabilityDTO> SearchAvailableRooms(DateTime checkIn, DateTime checkOut, string type = null, decimal? min = null, decimal? max = null)
         {
-            var rooms = repo.GetRooms();
+            var rooms = repo.GetAvailableRooms(checkIn, checkOut, type, min, max);
 
             // You will add advanced overlap-check LINQ here later (F1)
             var filtered = rooms.Where(r => r.Status == "Available");
@@ -129,6 +131,12 @@ namespace BLL.Services
 
 
             return true;
+        }
+        // Add this inside CustomerService.cs
+        public bool CancelReservation(int reservationId)
+        {
+            // You could add logic here: e.g., check if the check-in date is too close
+            return repo.CancelReservation(reservationId);
         }
 
 

@@ -105,25 +105,55 @@
     }
 
     <!-- RESERVATION HISTORY -->
-    <div class="card mb-4">
-        <div class="card-header bg-secondary text-white">My Reservations</div>
-        <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead><tr><th>Check-In</th><th>Check-Out</th><th>Status</th><th>Total</th></tr></thead>
-                <tbody>
-                    @foreach (var r in Model.MyReservations)
-                    {
-                        <tr>
-                            <td>@r.CheckInDate.ToShortDateString()</td>
-                            <td>@r.CheckOutDate.ToShortDateString()</td>
-                            <td><span class="badge bg-info">@r.Status</span></td>
-                            <td>$@r.TotalAmount</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+    <div class="card mb-4 border-secondary">
+    <div class="card-header bg-secondary text-white">My Reservations</div>
+    <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Room</th>
+                    <th>Check-In</th>
+                    <th>Check-Out</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th> <!-- Added Header -->
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.MyReservations)
+                {
+                    <tr>
+                        <td><strong>@r.RoomNumber</strong></td> <!-- Use RoomNumber, not RoomId! -->
+                        <td>@r.CheckInDate.ToShortDateString()</td>
+                        <td>@r.CheckOutDate.ToShortDateString()</td>
+                        <td>
+                            @if (r.Status == "Cancelled")
+                            {
+                                <span class="badge bg-danger">@r.Status</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-info">@r.Status</span>
+                            }
+                        </td>
+                        <td>$@r.TotalAmount</td>
+                        <td>
+                            <!-- Only show Cancel button if it's a Confirmed/Active reservation -->
+                            @if (r.Status == "Confirmed" || r.Status == "Pending")
+                            {
+                                <form asp-action="CancelReservation" method="post" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                    <input type="hidden" name="reservationId" value="@r.ReservationId" />
+                                    <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
+</div>
 
     <!-- PAYMENT HISTORY -->
     <div class="card mb-4">

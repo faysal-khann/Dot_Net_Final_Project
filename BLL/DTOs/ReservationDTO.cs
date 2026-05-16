@@ -8,11 +8,13 @@ namespace BLL.DTOs
     {
         public int ReservationId { get; set; }
         public int CustomerId { get; set; }
+        public int RoomId { get; set; }
         public string CustomerName { get; set; }
         public DateTime CheckInDate { get; set; }
         public DateTime CheckOutDate { get; set; }
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
-        public List<ReservationRoomDTO> Rooms { get; set; } = new();
+        public string RoomNumber { get; set; }
+        public List<ReservationRoomDTO> Rooms { get; set; }
     }
 }
