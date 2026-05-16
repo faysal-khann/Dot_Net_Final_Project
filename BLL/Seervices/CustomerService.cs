@@ -1,8 +1,9 @@
 ﻿using BLL.DTOs;
+using DAL.EF.Tables;
 using DAL.Repos;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BLL.Services
 {
@@ -17,6 +18,8 @@ namespace BLL.Services
             var cust = repo.GetCustomer(customerId);
             var reservations = repo.GetReservationsByCustomer(customerId);
             var payments = repo.GetPaymentsByCustomer(customerId);
+
+            var roomtype = repo.getRoomType();
 
             return new CustomerDashboardDTO
             {
@@ -39,6 +42,12 @@ namespace BLL.Services
                     Status = r.Status,
                     TotalAmount = r.TotalAmount
                 }).ToList(),
+                RoomTypes = roomtype.Select(t => new RoomTypeDTO
+                {
+                    RoomTypeId = t.RoomTypeId,
+                    TypeName = t.TypeName,
+                    Capacity = t.Capacity
+                }).ToList(),
 
                 MyPayments = payments.Select(p => new PaymentDTO
                 {
@@ -49,6 +58,20 @@ namespace BLL.Services
                     PaymentDate = p.PaymentDate,
                     Status = "Confirmed"
                 }).ToList()
+
+
+            };
+        }
+
+        public CustomerpDTO GetCustomerByUserId(int userId)
+        {
+            var c = repo.GetCustomerByUserId(userId);
+
+            return new CustomerpDTO
+            {
+                CustomerId = c.CustomerId,
+                Name = c.Name,
+                Email = c.Email
             };
         }
 
@@ -84,6 +107,7 @@ namespace BLL.Services
 
             var res = new DAL.EF.Tables.Reservation
             {
+                RoomId = roomId,
                 CustomerId = customerId,
                 CheckInDate = DateOnly.FromDateTime(checkIn),
                 CheckOutDate = DateOnly.FromDateTime(checkOut),
@@ -102,7 +126,11 @@ namespace BLL.Services
                 PaymentDate = DateTime.Now
             });
 
+
+
             return true;
         }
+
+
     }
 }

@@ -10,25 +10,103 @@
         VIP Status: <strong>@(Model.Profile.IsVIP ? "VIP ⭐" : "Standard")</strong>
     </div>
 
-    <!-- SEARCH + AVAILABILITY -->
-    <div class="card mb-4">
+    <!-- SEARCH FORM -->
+    <div class="card mb-4 shadow-sm">
         <div class="card-header bg-dark text-white">Search Available Rooms</div>
-        <div class="card-body">
-            <form asp-action="SearchRooms" method="get" class="row g-2">
-                <div class="col-md-3"><input type="date" name="checkIn" class="form-control" required /></div>
-                <div class="col-md-3"><input type="date" name="checkOut" class="form-control" required /></div>
-                <div class="col-md-2"><input name="type" class="form-control" placeholder="Room Type" /></div>
-                <div class="col-md-2"><input name="minPrice" class="form-control" placeholder="Min Price" /></div>
-                <div class="col-md-2"><input name="maxPrice" class="form-control" placeholder="Max Price" /></div>
-                <div class="col-md-12"><button class="btn btn-primary w-100">Search</button></div>
+        <div class="card-body bg-light">
+            <!-- Form now points back to Dashboard -->
+            <form asp-action="Dashboard" method="get" class="row g-2 align-items-center">
+                <div class="col-md-2">
+                    <label class="small font-weight-bold">Check-In</label>
+                    <input type="date" name="checkIn" value="@ViewBag.CheckIn" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+                    <label class="small font-weight-bold">Check-Out</label>
+                    <input type="date" name="checkOut" value="@ViewBag.CheckOut" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+
+                    <label class="small font-weight-bold">
+                        Type
+                    </label>
+
+                    <select name="type" class="form-control">
+
+                        <option value="">
+                            -- All Types --
+                        </option>
+
+                        @foreach (var t in Model.RoomTypes)
+                        {
+                            <option value="@t.TypeName"
+                                    selected="@(ViewBag.Type == t.TypeName)">
+
+                                @t.TypeName
+
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+                <div class="col-md-2">
+                    <label class="small font-weight-bold">Min Price</label>
+                    <input type="number" name="minPrice" value="@ViewBag.MinPrice" class="form-control" placeholder="Min" />
+                </div>
+                <div class="col-md-2">
+                    <label class="small font-weight-bold">Max Price</label>
+                    <input type="number" name="maxPrice" value="@ViewBag.MaxPrice" class="form-control" placeholder="Max" />
+                </div>
+                <div class="col-md-2 mt-4">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
             </form>
         </div>
     </div>
-   
+
+    <!-- AVAILABLE ROOMS RESULTS -->
+    @if (Model.AvailableRooms != null && Model.AvailableRooms.Any())
+    {
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white">Available Rooms</div>
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr><th>Room</th><th>Type</th><th>Price</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in Model.AvailableRooms)
+                        {
+                            <tr>
+                                <td><strong>@r.RoomNumber</strong></td>
+                                <td>@r.TypeName</td>
+                                <td>$@r.Price</td>
+                                <td>
+                                    <!-- Booking Form -->
+                                    <form asp-action="BookRoom" method="post" class="d-flex">
+                                        <input type="hidden" name="roomId" value="@r.RoomId" />
+                                        <input type="hidden" name="price" value="@r.Price" />
+                                        <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
+                                        <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
+                                        
+                                        <select name="method" class="form-control form-control-sm mr-2" style="width: 90px;">
+                                            <option>Card</option>
+                                            <option>Cash</option>
+                                        </select>
+                                        <button class="btn btn-sm btn-success">Book</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
 
     <!-- RESERVATION HISTORY -->
     <div class="card mb-4">
-        <div class="card-header bg-primary text-white">My Reservations</div>
+        <div class="card-header bg-secondary text-white">My Reservations</div>
         <div class="card-body p-0">
             <table class="table table-striped mb-0">
                 <thead><tr><th>Check-In</th><th>Check-Out</th><th>Status</th><th>Total</th></tr></thead>
@@ -39,7 +117,7 @@
                             <td>@r.CheckInDate.ToShortDateString()</td>
                             <td>@r.CheckOutDate.ToShortDateString()</td>
                             <td><span class="badge bg-info">@r.Status</span></td>
-                            <td>@r.TotalAmount</td>
+                            <td>$@r.TotalAmount</td>
                         </tr>
                     }
                 </tbody>
@@ -58,7 +136,7 @@
                     {
                         <tr>
                             <td>@p.ReservationId</td>
-                            <td>@p.Amount</td>
+                            <td>$@p.Amount</td>
                             <td>@p.Method</td>
                             <td>@p.PaymentDate.ToShortDateString()</td>
                         </tr>

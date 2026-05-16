@@ -9,10 +9,33 @@ namespace App.Controllers
         private readonly CustomerService service;
         public CustomerController(CustomerService service) { this.service = service; }
 
-        public IActionResult Dashboard()
+        public IActionResult Dashboard(DateTime? checkIn, DateTime? checkOut, string type, decimal? minPrice, decimal? maxPrice)
         {
-            int customerId = 4; // In a real app, get this from the logged-in User's Session/Claims
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            var customer = service.GetCustomerByUserId(userId.Value);
+
+            int customerId = customer.CustomerId;
+            ViewBag.CustomerId = customerId;
+
+            // In a real app, get this from the logged-in User's Session
+
+            // 1. Set default dates if they just logged in
+            var inDate = checkIn ?? DateTime.Today;
+            var outDate = checkOut ?? DateTime.Today.AddDays(1);
+
+            ViewBag.CheckIn = inDate.ToString("yyyy-MM-dd");
+            ViewBag.CheckOut = outDate.ToString("yyyy-MM-dd");
+            ViewBag.Type = type;
+            ViewBag.MinPrice = minPrice;
+            ViewBag.MaxPrice = maxPrice;
+
+            // 2. Get the dashboard history
             var model = service.GetDashboard(customerId);
+
+            // 3. Get the rooms and attach them to the dashboard model!
+            model.AvailableRooms = service.SearchAvailableRooms(inDate, outDate, type, minPrice, maxPrice);
+
             return View(model);
         }
 
@@ -26,7 +49,12 @@ namespace App.Controllers
         [HttpPost]
         public IActionResult BookRoom(int roomId, DateTime checkIn, DateTime checkOut, decimal price, string method)
         {
-            int customerId = Convert.ToInt32(HttpContext.Session.GetString("UserId"));
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            var customer = service.GetCustomerByUserId(userId.Value);
+
+            int customerId = customer.CustomerId;
+
             service.BookRoom(customerId, roomId, checkIn, checkOut, price, method);
             return RedirectToAction("Dashboard");
         }

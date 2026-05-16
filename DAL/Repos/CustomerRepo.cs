@@ -16,7 +16,10 @@ namespace DAL.Repos
 
         public List<Room> GetRooms() =>
             db.Rooms.Include(r => r.RoomType).ToList();
-
+        public List<RoomType> getRoomType()
+        {
+            return db.RoomTypes.ToList();
+        }
         public List<Reservation> GetReservationsByCustomer(int customerId) =>
             db.Reservations.Include(r => r.ReservationRooms).ThenInclude(rr => rr.Room)
                            .Where(r => r.CustomerId == customerId).ToList();
@@ -35,5 +38,11 @@ namespace DAL.Repos
 
         public List<Payment> GetPaymentsByCustomer(int customerId) =>
             db.Payments.Where(p => p.Reservation.CustomerId == customerId).ToList();
+
+        public Customer GetCustomerByUserId(int userId)
+        {
+            return db.Customers
+                     .FirstOrDefault(c => c.UserId == userId);
+        }
     }
 }
