@@ -5,7 +5,7 @@ namespace App.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly AdminService _adminService;
+        AdminService _adminService;
 
         public AdminController(AdminService adminService)
         {
@@ -18,21 +18,10 @@ namespace App.Controllers
         [HttpGet]
         public IActionResult Dashboard()
         {
-            // TODO: Call _adminService.GetDashboardStats() to get real DB data
-            var stats = new BLL.DTOs.DashboardDTO
-            {
-                RevenueToday = 1250.00m,
-                RevenueThisMonth = 34500.00m,
-                OccupancyRate = 82.5,
-                ConfirmedReservations = 45,
-                PendingReservations = 12,
-                CancelledReservations = 3,
-                PendingEmployeeApprovals = 2 // Links to the approval page we just built!
-            };
+            // Fetch real DB data!
+            var stats = _adminService.GetDashboardStats();
 
             return View(stats);
-
-
         }
         [HttpGet]
         public IActionResult PendingEmployees()
@@ -64,5 +53,15 @@ namespace App.Controllers
             }
             return RedirectToAction("PendingEmployees");
         }
+        // Add this inside AdminController.cs
+        [HttpGet]
+        public IActionResult ViewPayments()
+        {
+            var payments = _adminService.GetAllPayments();
+            return View(payments);
+        }
+
+        //------------------------------------------------------------------------------------------------------------
+
     }
 }

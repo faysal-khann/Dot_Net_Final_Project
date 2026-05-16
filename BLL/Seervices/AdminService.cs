@@ -45,5 +45,41 @@ namespace BLL.Services
         {
             return repo.ProcessEmployeeApproval(employeeId, "Rejected");
         }
+        //-----------------------------------------------------------------------------------------------------------
+        public DashboardDTO GetDashboardStats()
+        {
+            // Gather all the real data from the DAL and put it into the DTO
+            var stats = new DashboardDTO
+            {
+                RevenueToday = repo.GetRevenueToday(),
+                RevenueThisMonth = repo.GetRevenueThisMonth(),
+                OccupancyRate = repo.GetOccupancyRate(),
+
+                ConfirmedReservations = repo.GetReservationCountByStatus("Confirmed"),
+                PendingReservations = repo.GetReservationCountByStatus("Pending"),
+                CancelledReservations = repo.GetReservationCountByStatus("Cancelled"),
+
+                PendingEmployeeApprovals = repo.GetPendingEmployeeApprovals()
+            };
+
+            return stats;
+        }
+        // Add this inside AdminDashboardService.cs
+        public List<PaymentDTO> GetAllPayments()
+        {
+            var payments = repo.GetAllPaymentsWithDetails();
+
+            return payments.Select(p => new PaymentDTO
+            {
+                PaymentId = p.PaymentId,
+                ReservationId = p.ReservationId,
+                Amount = p.Amount,
+                Method = p.PaymentMethod,
+                PaymentDate = p.PaymentDate,
+                CustomerName = p.Reservation.Customer.Name,
+                RoomNumber = p.Reservation.Room.RoomNumber
+            }).ToList();
+        }
+
     }
 }

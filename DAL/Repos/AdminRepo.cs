@@ -53,6 +53,58 @@ namespace DAL.Repos
 
 
 
-        //-------------------------------------------User management methods -------------------------------------------
-    }
+        //------------------------------------------- -------------------------------------------
+        public decimal GetRevenueToday()
+        {
+            var today = DateTime.Today;
+
+            return db.Payments
+                .Where(p => p.PaymentDate.Date == today)
+                .Sum(p => (decimal?)p.Amount) ?? 0m;
+        }
+
+        public decimal GetRevenueThisMonth()
+        {
+            var today = DateTime.Today;
+            // Sum payments matching the current month and year
+            return db.Payments
+                     .Where(p => p.PaymentDate.Month == today.Month && p.PaymentDate.Year == today.Year)
+                     .Sum(p => (decimal?)p.Amount) ?? 0m;
+        }
+
+        public double GetOccupancyRate()
+        {
+            int totalRooms = db.Rooms.Count();
+            if (totalRooms == 0) return 0;
+
+            int occupiedRooms = db.Rooms.Count(r => r.Status == "Occupied");
+
+            // Calculate percentage and round to 2 decimal places
+            return Math.Round((double)occupiedRooms / totalRooms * 100, 2);
+        }
+
+        public int GetReservationCountByStatus(string status)
+        {
+            return db.Reservations.Count(r => r.Status == status);
+        }
+
+        public int GetPendingEmployeeApprovals()
+        {
+            // Count employees waiting for admin approval
+            return db.Employees.Count(e => e.ApprovalStatus == "Pending");
+        }
+
+        // Add this inside AdminDashboardRepo.cs
+
+
+            public List<Payment> GetAllPaymentsWithDetails()
+            {
+                   return db.Payments
+                 .Include(p => p.Reservation).ThenInclude(r => r.Customer)
+                 .Include(p => p.Reservation).ThenInclude(r => r.Room)
+                 .OrderByDescending(p => p.PaymentDate)
+                 .ToList();
+             }
+
+}
 }

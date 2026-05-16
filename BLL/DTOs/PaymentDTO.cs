@@ -10,6 +10,8 @@ namespace BLL.DTOs
         public int ReservationId { get; set; }
         public decimal Amount { get; set; }
         public string Method { get; set; }
+        public string CustomerName { get; set; } = null!;
+        public string RoomNumber { get; set; } = null!;
         public DateTime PaymentDate { get; set; }
         public string Status { get; set; }
     }
