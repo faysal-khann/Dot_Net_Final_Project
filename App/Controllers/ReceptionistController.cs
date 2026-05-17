@@ -26,17 +26,7 @@ namespace App.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        public IActionResult EditReservation(int id)
-        {
-            return View(service.GetReservation(id));
-        }
-
-        [HttpPost]
-        public IActionResult EditReservation(ReservationDTO dto)
-        {
-            service.UpdateReservation(dto);
-            return RedirectToAction("Dashboard");
-        }
+        
 
         public IActionResult CancelReservation(int id)
         {
@@ -60,6 +50,35 @@ namespace App.Controllers
         public IActionResult ConfirmCheckOut(int id, string paymentMethod)
         {
             service.CheckOut(id, paymentMethod);
+            return RedirectToAction("Dashboard");
+        }
+        [HttpGet]
+        public IActionResult EditReservation(int id)
+        {
+            var model = service.GetReservation(id);
+            if (model == null) return NotFound();
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditReservation(ReservationDTO dto)
+        {
+            service.UpdateReservation(dto);
+            return RedirectToAction("Dashboard");
+        }
+        public IActionResult SearchReservations(string CustomerName, DateTime? Date, string Status)
+        {
+            // Re-use the dashboard data but replace the Reservations list with the filtered one
+            var model = service.GetDashboard();
+            model.Reservations = service.SearchReservations(CustomerName, Date, Status);
+
+            // Return to the Dashboard view with the filtered model
+            return View("Dashboard", model);
+        }
+        [HttpGet]
+        public IActionResult DeleteReservation(int id)
+        {
+            service.DeleteReservation(id);
             return RedirectToAction("Dashboard");
         }
     }

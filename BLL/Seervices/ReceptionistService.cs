@@ -35,16 +35,20 @@ namespace BLL.Services
 
         // Reservation CRUD
         public List<ReservationDTO> GetReservations() =>
-            repo.GetAllReservations().Select(r => new ReservationDTO
-            {
-                ReservationId = r.ReservationId,
-                CustomerId = r.CustomerId,
-                CustomerName = r.Customer.Name,
-                CheckInDate = r.CheckInDate.ToDateTime(TimeOnly.MinValue),
-                CheckOutDate = r.CheckOutDate.ToDateTime(TimeOnly.MinValue),
-                Status = r.Status,
-                TotalAmount = r.TotalAmount
-            }).ToList();
+    repo.GetAllReservations().Select(r => new ReservationDTO
+    {
+        // ... existing properties ...
+        ReservationId = r.ReservationId,
+        CustomerName = r.Customer.Name,
+        CheckInDate = r.CheckInDate.ToDateTime(TimeOnly.MinValue),
+        CheckOutDate = r.CheckOutDate.ToDateTime(TimeOnly.MinValue),
+        Status = r.Status,
+        TotalAmount = r.TotalAmount,
+
+        // Add these two lines:
+        RoomNumber = string.Join(", ", r.ReservationRooms.Select(rr => rr.Room.RoomNumber)),
+        RoomTypes = string.Join(", ", r.ReservationRooms.Select(rr => rr.Room.RoomType.TypeName).Distinct())
+    }).ToList();
 
         public ReservationDTO GetReservation(int id)
         {
@@ -193,5 +197,26 @@ namespace BLL.Services
                 PaymentDate = p.PaymentDate,
                 Status = "Paid"
             }).ToList();
+
+        public List<ReservationDTO> SearchReservations(string customerName, DateTime? date, string status)
+        {
+            return repo.SearchReservations(customerName, date, status).Select(r => new ReservationDTO
+            {
+                ReservationId = r.ReservationId,
+                CustomerId = r.CustomerId,
+                CustomerName = r.Customer.Name,
+                CheckInDate = r.CheckInDate.ToDateTime(TimeOnly.MinValue),
+                CheckOutDate = r.CheckOutDate.ToDateTime(TimeOnly.MinValue),
+                Status = r.Status,
+                TotalAmount = r.TotalAmount
+            }).ToList();
+
+
+        }
+
+        public bool DeleteReservation(int id)
+        {
+            return repo.DeleteReservation(id);
+        }
     }
 }

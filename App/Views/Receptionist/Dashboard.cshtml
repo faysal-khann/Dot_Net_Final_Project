@@ -96,6 +96,8 @@
                 <thead>
                     <tr>
                         <th>Customer</th>
+                        <th>Room(s)</th>
+                        <th>Type</th>
                         <th>Check-In</th>
                         <th>Check-Out</th>
                         <th>Status</th>
@@ -108,15 +110,21 @@
                     {
                         <tr>
                             <td>@r.CustomerName</td>
+                            <td>@r.RoomNumber</td>
+                            <td>@r.RoomTypes</td>
                             <td>@r.CheckInDate.ToShortDateString()</td>
                             <td>@r.CheckOutDate.ToShortDateString()</td>
                             <td>@r.Status</td>
                             <td>@r.TotalAmount</td>
                             <td>
-                                <a asp-action="CheckIn" asp-route-id="@r.ReservationId" class="btn btn-sm btn-success">Check-In</a>
-                                <a asp-action="CheckOut" asp-route-id="@r.ReservationId" class="btn btn-sm btn-warning">Check-Out</a>
-                                <a asp-action="EditReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-secondary">Edit</a>
-                                <a asp-action="CancelReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-danger">Cancel</a>
+                                @if (r.Status != "Completed")
+                                {
+                                    <a asp-action="CheckIn" asp-route-id="@r.ReservationId" class="btn btn-sm btn-success">Check-In</a>
+                                    <a asp-action="CheckOut" asp-route-id="@r.ReservationId" class="btn btn-sm btn-primary">Check-Out</a>
+                                    <a asp-action="EditReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-secondary">Edit</a>
+                                    <a asp-action="CancelReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-warning">Cancel</a>
+                                }
+                                <a asp-action="DeleteReservation" asp-route-id="@r.ReservationId" class="btn btn-sm btn-danger">Delete</a>
                             </td>
                         </tr>
                     }
@@ -159,18 +167,7 @@
         <div class="tab-pane fade" id="rooms">
             <h5>Room Availability</h5>
 
-            <!-- Filter Rooms -->
-            <form class="row g-2 mb-3" asp-action="FilterRooms" method="get">
-                <div class="col-md-4">
-                    <input name="Type" class="form-control" placeholder="Room Type" />
-                </div>
-                <div class="col-md-4">
-                    <input name="MaxPrice" class="form-control" placeholder="Max Price" />
-                </div>
-                <div class="col-md-4">
-                    <button class="btn btn-dark w-100">Filter</button>
-                </div>
-            </form>
+            
 
             <table class="table table-bordered">
                 <thead><tr><th>Room</th><th>Type</th><th>Price</th><th>Status</th></tr></thead>

@@ -15,6 +15,7 @@ namespace BLL.DTOs
         public string Status { get; set; }
         public decimal TotalAmount { get; set; }
         public string RoomNumber { get; set; }
+        public string RoomTypes { get; set; }
         public List<ReservationRoomDTO> Rooms { get; set; }
     }
 }
