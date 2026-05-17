@@ -25,5 +25,9 @@ namespace BLL.Services
             }
             return null; // Login failed
         }
+        public string GetEmployeePosition(int userId)
+        {
+            return repo.GetEmployeePositionByUserId(userId);
+        }
     }
 }

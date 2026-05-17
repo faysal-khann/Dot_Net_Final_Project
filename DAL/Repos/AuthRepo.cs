@@ -37,6 +37,20 @@ namespace DAL.Repos
 
                 return sb.ToString();
             }
+
+        }
+
+        public string GetEmployeePositionByUserId(int userId)
+        {
+            var employee = db.Employees
+                             .FirstOrDefault(e => e.UserId == userId);
+
+            if (employee != null)
+            {
+                return employee.Position;
+            }
+
+            return null;
         }
     }
 }

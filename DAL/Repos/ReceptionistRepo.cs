@@ -38,5 +38,6 @@ namespace DAL.Repos
         // Payments
         public bool AddPayment(Payment p) { db.Payments.Add(p); return db.SaveChanges() > 0; }
         public List<Payment> GetPayments() => db.Payments.ToList();
+        
     }
 }

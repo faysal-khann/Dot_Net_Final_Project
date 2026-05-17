@@ -35,7 +35,12 @@ namespace DAL.Repos
             db.Payments.Add(p);
             return db.SaveChanges() > 0;
         }
+        public bool AddReservationRoom(ReservationRoom r)
+        {
+            db.ReservationRooms.Add(r);
+            return db.SaveChanges() > 0;
 
+        }
         public List<Payment> GetPaymentsByCustomer(int customerId) =>
             db.Payments.Where(p => p.Reservation.CustomerId == customerId).ToList();
 
@@ -43,6 +48,11 @@ namespace DAL.Repos
         {
             return db.Customers
                      .FirstOrDefault(c => c.UserId == userId);
+        }
+
+        public ReservationRoom GetRoomByReservationID(int reservationId)
+        {
+                        return db.ReservationRooms.FirstOrDefault(rr => rr.ReservationId == reservationId);
         }
         public List<Room> GetAvailableRooms(DateTime reqCheckIn, DateTime reqCheckOut, string type, decimal? minPrice, decimal? maxPrice)
         {

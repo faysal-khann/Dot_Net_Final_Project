@@ -17,7 +17,7 @@ namespace BLL.DTOs
         public List<PaymentDTO> Payments { get; set; } = new();
     }
 
-  
+
 
     public class ReservationRoomDTO
     {
@@ -25,6 +25,7 @@ namespace BLL.DTOs
         public string RoomNumber { get; set; }
         public decimal PricePerNight { get; set; }
     }
+
 
     public class ReservationSearchDTO
     {

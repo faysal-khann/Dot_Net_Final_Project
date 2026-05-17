@@ -65,6 +65,8 @@ namespace BLL.Services
             };
         }
 
+        
+
         public CustomerpDTO GetCustomerByUserId(int userId)
         {
             var c = repo.GetCustomerByUserId(userId);
@@ -127,6 +129,15 @@ namespace BLL.Services
                 PaymentMethod = paymentMethod,
                 PaymentDate = DateTime.Now
             });
+
+            repo.AddReservationRoom(new DAL.EF.Tables.ReservationRoom
+            {
+                ReservationId= res.ReservationId,
+                RoomId=res.RoomId,
+                PricePerNight = (int)pricePerNight
+            });
+             
+            
 
 
 

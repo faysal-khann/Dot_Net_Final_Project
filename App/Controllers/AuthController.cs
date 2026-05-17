@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BLL.DTOs;
 using BLL.Services;
-using BLL.DTOs;
 using Microsoft.AspNetCore.Http; // Required for Session
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace App.Controllers
 {
@@ -37,8 +38,14 @@ namespace App.Controllers
                     // Redirect based on Role
                     if (user.Role == "employee")
                     {
-                        if(user.Status == "active")
+                        var position = _authService.GetEmployeePosition(user.UserId);
+                        if(position == "Receptionist")
                         {
+                            return RedirectToAction("Dashboard", "Receptionist");
+                        }
+                        else if (user.Status == "active")
+                        {
+                            
                             return RedirectToAction("Dashboard", "Employee");
                         }
                         else
