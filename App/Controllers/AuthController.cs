@@ -39,27 +39,53 @@ namespace App.Controllers
                     if (user.Role == "employee")
                     {
                         var position = _authService.GetEmployeePosition(user.UserId);
-                        if(position == "Receptionist")
+                        
+                        if (user.Status == "active")
                         {
-                            return RedirectToAction("Dashboard", "Receptionist");
-                        }
-                        else if (user.Status == "active")
-                        {
-                            
+
+                            if (position == "Receptionist")
+                            {
+                                return RedirectToAction("Dashboard", "Receptionist");
+                            }
                             return RedirectToAction("Dashboard", "Employee");
-                        }
+                        } 
+                        else if (user.Status == "pending")
+                        {
+
+                            ViewBag.Error = "Your account is pending. Please contact admin.";
+                           
+                        } 
+                        
                         else
                         {
                             ViewBag.Error = "Your account is inactive. Please contact admin.";
+                            
                         }
+                        return View();
                     }
                     else if (user.Role == "admin")
                     {
                         return RedirectToAction("Dashboard", "Admin");
                     }
-                    else if (user.Role == "receptionist")
+                    else if (user.Role == "customer")
+
                     {
-                        return RedirectToAction("Dashboard", "Customer");
+                        if (user.Status == "active")
+                        {
+
+                            return RedirectToAction("Dashboard", "Customer");
+                        }
+                        else if (user.Status == "pending")
+                        {
+
+                            ViewBag.Error = "Your account is pending. Please contact admin.";
+                        }
+                        else
+                        {
+                            ViewBag.Error = "Your account is inactive. Please contact admin.";
+                        }
+                        return View();
+
                     }
                     else
                     {

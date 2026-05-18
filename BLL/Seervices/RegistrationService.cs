@@ -23,7 +23,7 @@ namespace BLL.Services
         {
             // Map DTOs to Entities
             var user = mapper.Map<User>(c);
-            user.Role = "receptionist";
+            user.Role = "customer";
             user.Status = "active";
             user.CreatedAt = DateTime.Now;
             user.Password = GetMd5(c.Password);
