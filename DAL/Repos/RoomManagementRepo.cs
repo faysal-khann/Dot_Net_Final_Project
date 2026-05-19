@@ -39,7 +39,53 @@ namespace DAL.Repos
             existing.Status = r.Status;
             return db.SaveChanges() > 0;
         }
-        public bool DeleteRoom(int id) { var r = db.Rooms.Find(id); if (r != null) { db.Rooms.Remove(r); return db.SaveChanges() > 0; } return false; }
+        public bool DeleteRoom(int id)
+        {
+            var room = db.Rooms.Find(id);
+
+            if (room != null)
+            {
+                // 1. Get reservations for this room
+                var reservations = db.Reservations
+                                     .Where(r => r.RoomId == id)
+                                     .ToList();
+
+                var reservationIds = reservations.Select(r => r.ReservationId).ToList();
+
+                // 2. Delete Payments first (IMPORTANT)
+                var payments = db.Payments
+                                 .Where(p => reservationIds.Contains(p.ReservationId))
+                                 .ToList();
+
+                if (payments.Any())
+                {
+                    db.Payments.RemoveRange(payments);
+                }
+
+                // 3. Delete ReservationRooms
+                var reservationRooms = db.ReservationRooms
+                                         .Where(rr => rr.RoomId == id)
+                                         .ToList();
+
+                if (reservationRooms.Any())
+                {
+                    db.ReservationRooms.RemoveRange(reservationRooms);
+                }
+
+                // 4. Delete Reservations
+                if (reservations.Any())
+                {
+                    db.Reservations.RemoveRange(reservations);
+                }
+
+                // 5. Delete Room
+                db.Rooms.Remove(room);
+
+                return db.SaveChanges() > 0;
+            }
+
+            return false;
+        }
 
         // --- BEYOND CRUD #1: Advanced Filtering ---
         public List<Room> FilterRooms(int? typeId, string status, decimal? minPrice, decimal? maxPrice)

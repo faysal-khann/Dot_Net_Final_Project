@@ -5,38 +5,55 @@ namespace App.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly EmployeeService _employeeService;
+        private readonly EmployeeService service;
 
         public EmployeeController(EmployeeService employeeService)
         {
-            _employeeService = employeeService;
+            this.service = employeeService;
         }
 
         [HttpGet]
         public IActionResult Dashboard()
         {
-            // In a real app, get these from the logged-in User's Session/Claims
-            int employeeId = 1;
-            string employeeName = "John Doe";
-            string approvalStatus = "Approved"; // Change to "Pending" to test the UI alert
+            // Simulate logged in User. Replace with: int userId = int.Parse(User.FindFirst("UserId").Value);
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            var employee = service.GetEmployeeByUserId(userId.Value);
+            var model = service.GetDashboardData(userId.Value);
 
-            var model = _employeeService.GetDashboardData(employeeId, employeeName, approvalStatus);
+            if (model == null) return Content("Employee Profile not found.");
+
             return View(model);
         }
 
         [HttpPost]
         public IActionResult MarkRoomCleaned(int roomId)
         {
-            _employeeService.MarkRoomAvailable(roomId);
+            service.MarkRoomAvailable(roomId);
             TempData["SuccessMessage"] = "Room marked as Available!";
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult MarkMaintenanceDone(int roomId)
+        {
+            service.MarkRoomAvailable(roomId); // Available after fix
+            TempData["SuccessMessage"] = "Maintenance complete. Room is Available!";
             return RedirectToAction("Dashboard");
         }
 
         [HttpPost]
         public IActionResult ReportMaintenance(int roomId)
         {
-            _employeeService.ReportMaintenanceIssue(roomId);
+            service.ReportMaintenanceIssue(roomId);
             TempData["WarningMessage"] = "Room reported for Maintenance.";
+            return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        public IActionResult ApproveEmployee(int employeeId)
+        {
+            service.ApproveEmployee(employeeId);
+            TempData["SuccessMessage"] = "Employee Approved successfully!";
             return RedirectToAction("Dashboard");
         }
     }

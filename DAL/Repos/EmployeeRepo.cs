@@ -15,24 +15,45 @@ namespace DAL.Repos
         {
             this.db = db;
         }
+        
 
-        // Get Rooms that need cleaning or maintenance
-        public List<Room> GetPendingRoomTasks()
+        // Fetch real employee profile
+        public Employee GetEmployeeByUserId(int userId)
         {
-            return db.Rooms
-                     .Where(r => r.Status == "Cleaning" || r.Status == "Maintenance")
-                     .ToList();
+            return db.Employees.FirstOrDefault(e => e.UserId == userId);
         }
 
-        // Update Room Status (Cleaning -> Available, or -> Maintenance)
+        // General Task Fetcher (Pass "Cleaning" for Cleaners, "Maintenance" for Technicians)
+        public List<Room> GetRoomsByStatus(string status)
+        {
+            return db.Rooms.Where(r => r.Status == status).ToList();
+        }
+
+        public List<Room> GetAllRooms() => db.Rooms.ToList();
+
         public bool UpdateRoomStatus(int roomId, string newStatus)
         {
             var room = db.Rooms.Find(roomId);
             if (room != null)
             {
                 room.Status = newStatus;
+                return db.SaveChanges() > 0;
+            }
+            return false;
+        }
 
-                // Extra: If marking as Available, you could log this in an Audit table here
+        // For Manager Dashboard
+        public List<Employee> GetPendingEmployees()
+        {
+            return db.Employees.Where(e => e.ApprovalStatus == "Pending").ToList();
+        }
+
+        public bool ApproveEmployee(int employeeId)
+        {
+            var emp = db.Employees.Find(employeeId);
+            if (emp != null)
+            {
+                emp.ApprovalStatus = "Approved";
                 return db.SaveChanges() > 0;
             }
             return false;
