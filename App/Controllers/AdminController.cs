@@ -1,5 +1,6 @@
 ﻿using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace App.Controllers
 {
@@ -19,9 +20,15 @@ namespace App.Controllers
         public IActionResult Dashboard()
         {
             // Fetch real DB data!
-            var stats = _adminService.GetDashboardStats();
+            if (HttpContext.Session.GetString("Role") == "admin")
+            {
+                var stats = _adminService.GetDashboardStats();
 
-            return View(stats);
+                return View(stats);
+            }
+            TempData["ErrorMessage"] = "Unauthorized access. Please log in to view this page.";
+            return RedirectToAction("Login", "Auth");
+
         }
         [HttpGet]
         public IActionResult PendingEmployees()

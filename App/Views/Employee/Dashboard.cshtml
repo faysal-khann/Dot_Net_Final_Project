@@ -4,10 +4,16 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+ 
         <h2>Welcome, @Model.EmployeeName!</h2>
         <span class="badge bg-secondary fs-6">Role: @Model.Position</span>
+        <div>
+            <button onclick="history.back()" class="btn btn-secondary me-2">Back</button>
+            <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger">Logout</a>
+        </div>
     </div>
+   
     
     @if (Model.ApprovalStatus == "Pending")
     {
@@ -27,6 +33,7 @@
         @* ---------------- MANAGER DASHBOARD ---------------- *@
         @if (Model.Position == "Manager")
         {
+
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm h-100 border-primary">
                     <div class="card-header bg-primary text-white">Pending Employee Approvals</div>

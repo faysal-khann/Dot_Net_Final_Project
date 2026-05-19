@@ -3,7 +3,20 @@
     ViewData["Title"] = "Manage Rooms"; var roomTypes = ViewBag.RoomTypes as List<BLL.DTOs.RoomTypeDTO>;
 }
 
-<h2>Admin: Room Management</h2>
+
+<div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <!-- Left side: Title -->
+    <h2>Admin: Room Management</h2>
+
+    <!-- Right side: Buttons -->
+    <div>
+        <!-- Goes to the previous page in browser history -->
+        <button onclick="history.back()" class="btn btn-secondary me-2">Back</button>
+        
+        <!-- Logs the user out (make sure asp-controller matches your Auth controller name) -->
+        <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger">Logout</a>
+    </div>
+</div>
 <div class="mb-3">
     <a asp-action="CreateRoom" class="btn btn-success">Add New Room</a>
     <a asp-action="RoomTypes" class="btn btn-secondary">Manage Room Types</a>

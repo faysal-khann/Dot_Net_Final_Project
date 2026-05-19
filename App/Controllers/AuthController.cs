@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs;
 using BLL.Services;
+using DAL.EF.Tables;
 using Microsoft.AspNetCore.Http; // Required for Session
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -18,6 +19,7 @@ namespace App.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            HttpContext.Session.SetString("Role", "");
             return View();
         }
 
@@ -26,6 +28,7 @@ namespace App.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 var user = _authService.Authenticate(loginDTO);
 
                 if (user != null)
@@ -45,6 +48,7 @@ namespace App.Controllers
 
                             if (position == "Receptionist")
                             {
+                                HttpContext.Session.SetString("position", "Receptionist");
                                 return RedirectToAction("Dashboard", "Receptionist");
                             }
                             return RedirectToAction("Dashboard", "Employee");

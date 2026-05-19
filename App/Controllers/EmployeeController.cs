@@ -15,14 +15,24 @@ namespace App.Controllers
         [HttpGet]
         public IActionResult Dashboard()
         {
-            // Simulate logged in User. Replace with: int userId = int.Parse(User.FindFirst("UserId").Value);
-            int? userId = HttpContext.Session.GetInt32("UserId");
-            var employee = service.GetEmployeeByUserId(userId.Value);
-            var model = service.GetDashboardData(userId.Value);
+            if (HttpContext.Session.GetString("Role") == "employee")
+            {
+                int? userId = HttpContext.Session.GetInt32("UserId");
+                var employee = service.GetEmployeeByUserId(userId.Value);
+                var model = service.GetDashboardData(userId.Value);
 
-            if (model == null) return Content("Employee Profile not found.");
+                if (model == null) return Content("Employee Profile not found.");
+                if (employee.Position == "Manager")
+                {
+                    return RedirectToAction("Index", "RoomManagement");
+                }
 
-            return View(model);
+                return View(model);
+            }
+            TempData["ErrorMessage"] = "Unauthorized access. Please log in to view this page.";
+            return RedirectToAction("Login", "Auth");
+
+
         }
 
         [HttpPost]

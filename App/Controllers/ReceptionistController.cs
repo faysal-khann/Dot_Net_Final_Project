@@ -11,8 +11,14 @@ namespace App.Controllers
 
         public IActionResult Dashboard()
         {
-            var model = service.GetDashboard();
-            return View(model);
+            if (HttpContext.Session.GetString("Role") == "employee")
+            {
+                var model = service.GetDashboard();
+                return View(model);
+            }
+            TempData["ErrorMessage"] = "Unauthorized access. Please log in to view this page.";
+            return RedirectToAction("Login", "Auth");
+
         }
 
         public IActionResult Reservations() => View(service.GetReservations());

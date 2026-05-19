@@ -16,8 +16,14 @@ namespace App.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var users = userService.GetAllUsers();
-            return View(users);
+            if (HttpContext.Session.GetString("Role") == "admin")
+            {
+                var users = userService.GetAllUsers();
+                return View(users);
+            }
+            TempData["ErrorMessage"] = "Unauthorized access. Please log in to view this page.";
+            return RedirectToAction("Login", "Auth");
+            
         }
 
         // GET: Assign Role form (BEYOND CRUD)

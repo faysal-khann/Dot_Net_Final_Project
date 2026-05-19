@@ -69,6 +69,7 @@ namespace BLL.Services
             {
                 EmployeeId = c.EmployeeId,
                 Name = c.Name,
+                Position = c.Position,
                 
             };
         }

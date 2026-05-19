@@ -8,7 +8,20 @@
 }
 
 <div class="container-fluid mt-4">
-    <h2>Add New Room</h2>
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        
+        <h2>Add New Room</h2>
+
+       
+        <div>
+          
+            <button onclick="history.back()" class="btn btn-secondary me-2">Back</button>
+        
+            <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
+
+    
     <hr />
 
     <div class="row">
