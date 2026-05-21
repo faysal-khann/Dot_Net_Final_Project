@@ -21,8 +21,9 @@ This solution follows a 3‑layer architecture:
 - **BLL** (Business Logic Layer): Services + DTOs + mapping (AutoMapper)
 - **DAL** (Data Access Layer): EF Core DbContext + Entities + Repositories
 
+
 ## 🧩 ER Diagram
-(./assets/Screenshot 2026-05-18 225313.png)
+![ER Diagram](./assets/Screenshot%202026-05-18%20225313.png)
 
 ### Project Structure
 
