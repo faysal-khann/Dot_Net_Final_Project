@@ -222,7 +222,7 @@ The default route is configured to start at:
 
 ## Screenshots / Demo (Optional)
 Add screenshots under a folder like:
-- `screenshots/`
+- `assets/Screenshot 2026-05-18 225313.png`
 and link them here in a table for a professional GitHub presentation.
 
 ## License
