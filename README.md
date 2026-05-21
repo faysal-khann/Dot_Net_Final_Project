@@ -25,45 +25,100 @@ This solution follows a 3‑layer architecture:
 
 ```text
 Dot_Net_Final_Project/
-├─ Final_Project.slnx
-├─ App/
-│  ├─ App.csproj
-│  ├─ Program.cs
-│  ├─ appsettings.json
-│  ├─ Controllers/
-│  │  ├─ AdminController.cs
-│  │  ├─ AuthController.cs
-│  │  ├─ CustomerController.cs
-│  │  ├─ EmployeeController.cs
-│  │  ├─ ReceptionistController.cs
-│  │  ├─ RegistrationController.cs
-│  │  ├─ RoomManagementController.cs
-│  │  └─ UserManagementController.cs
-│  ├─ Views/
-│  │  ├─ Admin/
-│  │  ├─ Auth/
-│  │  ├─ Customer/
-│  │  ├─ Employee/
-│  │  ├─ Receptionist/
-│  │  ├─ Registration/
-│  │  ├─ RoomManagement/
-│  │  ├─ UserManagement/
-│  │  └─ Shared/
-│  ├─ Models/
-│  └─ wwwroot/
+├── Final_Project.slnx
+├── App/
+│   ├── Program.cs
+│   ├── appsettings.json
+│   │
+│   ├── Controllers/
+│   │   ├── AdminController.cs
+│   │   ├── AuthController.cs
+│   │   ├── CustomerController.cs
+│   │   ├── EmployeeController.cs
+│   │   ├── HomeController.cs
+│   │   ├── ReceptionistController.cs
+│   │   ├── RegistrationController.cs
+│   │   ├── RoomManagementController.cs
+│   │   └── UserManagementController.cs
+│   │
+│   │
+│   ├── Views/
+│   │   │
+│   │   ├── Admin/
+│   │   │   ├── Dashboard.cshtml
+│   │   │   ├── PendingEmployees.cshtml
+│   │   │   └── ViewPayments.cshtml
+│   │   │
+│   │   ├── Auth/
+│   │   │   └── Login.cshtml
+│   │   │
+│   │   ├── Customer/
+│   │   │   ├── AvailableRooms.cshtml
+│   │   │   └── Dashboard.cshtml
+│   │   │
+│   │   ├── Employee/
+│   │   │   └── Dashboard.cshtml
+│   │   │
+│   │   ├── Home/
+│   │   ├── Receptionist/
+│   │   ├── Registration/
+│   │   ├── RoomManagement/
+│   │   ├── Shared/
+│   │   └── UserManagement/
+|   |
+├── BLL/
+│   ├── MapperConfig.cs
+│   ├── DTOs/
+│   │   ├── CustomerDTO.cs
+│   │   ├── CustomerDashboardDTO.cs
+│   │   ├── CustomerpDTO.cs
+│   │   ├── DashboardDTO.cs
+│   │   ├── EmployeeDTO.cs
+│   │   ├── EmployeeDashboardDTO.cs
+│   │   ├── LoginDTO.cs
+│   │   ├── PaymentDTO.cs
+│   │   ├── PendingEmployeeDTO.cs
+│   │   ├── RecetionistDTOs.cs
+│   │   ├── ReservationDTO.cs
+│   │   ├── RoomDTO.cs
+│   │   ├── RoomTypeDTO.cs
+│   │   └── UserDTO.cs
+│   └── Seervices/
+│       ├── AdminService.cs
+│       ├── AuthService.cs
+│       ├── CustomerService.cs
+│       ├── EmployeeService.cs
+│       ├── ReceptionistService.cs
+│       ├── RegistrationService.cs
+│       ├── RoomManagementService.cs
+│       ├── UserManagementService.cs
+│       └── practice.cs
 │
-├─ BLL/
-│  ├─ BLL.csproj
-│  ├─ MapperConfig.cs
-│  ├─ DTOs/
-│  └─ Seervices/              (services live here; folder name is "Seervices")
+├── DAL/
+│   ├── EF/
+│   │   ├── HotelManagementContext.cs
+│   │   └── Tables/
+│   │       ├── Customer.cs
+│   │       ├── Employee.cs
+│   │       ├── Payment.cs
+│   │       ├── Reservation.cs
+│   │       ├── ReservationRoom.cs
+│   │       ├── Room.cs
+│   │       ├── RoomType.cs
+│   │       └── User.cs
+│   └── Repos/
+│       ├── AdminRepo.cs
+│       ├── AuthRepo.cs
+│       ├── CustomerRepo.cs
+│       ├── EmployeeRepo.cs
+│       ├── ReceptionistRepo.cs
+│       ├── RegistrationRepo.cs
+│       ├── RoomManagementRepo.cs
+│       └── UserManagementRepo.cs
 │
-└─ DAL/
-   ├─ DAL.csproj
-   ├─ EF/
-   │  ├─ HotelManagementContext.cs   (DbContext)
-   │  └─ Tables/                     (EF entities)
-   └─ Repos/                         (repositories / DB queries)
+└── DLL/
+    ├── BLL.csproj
+    └── Class1.cs
 ```
 
 ### Layer responsibilities
