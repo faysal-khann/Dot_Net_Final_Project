@@ -224,10 +224,5 @@ The default route is configured to start at:
   - Registration, Auth, Admin, UserManagement, Employee, RoomManagement, Receptionist, Customer
 - AutoMapper is registered through `BLL.MapperConfig`.
 
-## Screenshots / Demo (Optional)
-Add screenshots under a folder like:
-- `assets/Screenshot 2026-05-18 225313.png`
-and link them here in a table for a professional GitHub presentation.
 
-## License
-This repository currently does not specify a license. If you want, add a `LICENSE` file (e.g., MIT).
+
