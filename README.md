@@ -22,7 +22,7 @@ This solution follows a 3‑layer architecture:
 - **DAL** (Data Access Layer): EF Core DbContext + Entities + Repositories
 
 ## 🧩 ER Diagram
-![ER Diagram](./assets/Screenshot 2026-05-18 225313.png)
+(./assets/Screenshot 2026-05-18 225313.png)
 
 ### Project Structure
 
